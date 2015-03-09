@@ -1,4 +1,4 @@
-class ArticleController < ApplicationController
+class ArticlesController < ApplicationController
   include ArticlesHelper
 
   def index
@@ -6,6 +6,8 @@ class ArticleController < ApplicationController
   end
 
   def show
+    @article = Article.find(params[:id])
+
     @comment = Comment.new
     @comment.article_id = @article.id
   end
@@ -17,6 +19,8 @@ class ArticleController < ApplicationController
   def create
     @article = Article.new(article_params)
     @article.save
+
+    flash.notice = "Article '#{@article.title}' Created!"
 
     redirect_to article_path(@article)
   end
@@ -32,5 +36,14 @@ class ArticleController < ApplicationController
     flash.notice = "Article '#{@article.title}' Updated!"
 
     redirect_to article_path(@article)
+  end
+
+  def destroy
+    @article = Article.find(params[:id])
+    @article.destroy
+
+    flash.notice = "Article '#{@article.title}' Deleted!"
+
+    redirect_to articles_path
   end
 end
